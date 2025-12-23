@@ -236,7 +236,7 @@ foreach ($exe in $executables) {
         Write-Error "Executable not found: $exePath"
         exit 1
     }
-    Write-Host "  ✓ $exe" -ForegroundColor Green
+    Write-Host "  [OK] $exe" -ForegroundColor Green
 }
 
 #============================================================================
@@ -264,7 +264,7 @@ foreach ($dll in $dlls) {
     $dllPath = Join-Path $buildDir $dll
     if (Test-Path $dllPath) {
         $releaseFiles += $dllPath
-        Write-Host "  ✓ $dll" -ForegroundColor Green
+        Write-Host "  [OK] $dll" -ForegroundColor Green
     } else {
         Write-Warning "DLL not found (skipping): $dllPath"
     }
@@ -275,7 +275,7 @@ foreach ($file in $packageFiles) {
     $filePath = Join-Path $projectRoot $file
     if (Test-Path $filePath) {
         $releaseFiles += $filePath
-        Write-Host "  ✓ $file" -ForegroundColor Green
+        Write-Host "  [OK] $file" -ForegroundColor Green
     } else {
         Write-Warning "Package file not found (skipping): $filePath"
     }
