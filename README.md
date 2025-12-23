@@ -12,6 +12,13 @@ Reusable build system for Phoenix SDR projects providing standardized CMake conf
 
 **Phoenix Build Scripts** is a git submodule that provides consistent build infrastructure across all Phoenix projects. It handles version management (MAJOR.MINOR.PATCH+BUILD.COMMIT-dirty), automated builds with MSYS2/CMake, and deployment to GitHub releases.
 
+## AI Agent Protocol (MANDATORY)
+
+- Follow this repository’s protocol only; do not invent alternate build flows.
+- **All builds must go through** `scripts/deploy-release.ps1` (dry run or `-Deploy`). Do not call `cmake` directly.
+- **Installation is required:** run `scripts/init-project.ps1` immediately after adding the submodule. Do not hand-create config files.
+- When you include this repo, copy the build instructions into your project’s `.github/copilot-instructions.md` so agents see them early.
+
 ### Key Features
 
 - **Standardized CMake presets** - msys2-ucrt64, debug, release configurations
@@ -32,7 +39,7 @@ git submodule add https://github.com/Alex-Pennington/phoenix-build-scripts exter
 git submodule update --init --recursive
 ```
 
-### 2. Initialize Your Project
+### 2. Install (initialize) via script — required
 
 ```powershell
 .\external\phoenix-build-scripts\scripts\init-project.ps1 `
@@ -42,7 +49,7 @@ git submodule update --init --recursive
     -PackageFiles @("README.md", "LICENSE", "docs/")
 ```
 
-This creates:
+This script installs all required config:
 - `CMakePresets.json` - Standard build presets
 - `cmake/version.h.in` - Version header template
 - `phoenix-build.json` - Project configuration
@@ -50,7 +57,7 @@ This creates:
 
 ### 3. Integrate with CMakeLists.txt
 
-Add this line **after** your `project()` command:
+Add this line **after** your `project()` command (no manual `cmake` runs required; the build script drives CMake):
 
 ```cmake
 project(my-phoenix-project
@@ -63,23 +70,13 @@ project(my-phoenix-project
 include(external/phoenix-build-scripts/cmake/phoenix-build.cmake)
 ```
 
-### 4. Build Your Project
+### 4. Build and Deploy (only via build script)
 
 ```powershell
-# Configure
-cmake --preset msys2-ucrt64
-
-# Build
-cmake --build --preset msys2-ucrt64
-```
-
-### 5. Deploy a Release
-
-```powershell
-# Dry run (builds and packages, no deployment)
+# Dry run build/package
 .\external\phoenix-build-scripts\scripts\deploy-release.ps1 -IncrementPatch
 
-# Deploy to GitHub
+# Deploy to GitHub (also the only approved release build path)
 .\external\phoenix-build-scripts\scripts\deploy-release.ps1 -IncrementPatch -Deploy
 ```
 
@@ -163,37 +160,35 @@ MAJOR.MINOR.PATCH+BUILD.COMMIT[-dirty]
 
 ## Deployment Workflow
 
-### Proper Release Process
+### Proper Release Process (only via deploy-release.ps1)
 
 1. **Commit all changes:**
-   ```bash
-   git add .
-   git commit -m "Your feature description"
-   ```
+    ```bash
+    git add .
+    git commit -m "Your feature description"
+    ```
 
-2. **Run deployment script:**
-   ```powershell
-   .\external\phoenix-build-scripts\scripts\deploy-release.ps1 -IncrementPatch -Deploy
-   ```
+2. **Run deployment script (the only approved build path):**
+    ```powershell
+    .\external\phoenix-build-scripts\scripts\deploy-release.ps1 -IncrementPatch -Deploy
+    ```
 
 3. **Script automatically:**
-   - Updates `CMakeLists.txt` version
-   - Increments `.phoenix-build-number`
-   - Rebuilds project
-   - Creates ZIP package
-   - Commits version changes
-   - Creates and pushes git tag (e.g., `v0.1.2`)
-   - Uploads release to GitHub
+    - Updates `CMakeLists.txt` version
+    - Increments `.phoenix-build-number`
+    - Rebuilds project
+    - Creates ZIP package
+    - Commits version changes
+    - Creates and pushes git tag (e.g., `v0.1.2`)
+    - Uploads release to GitHub
 
 ### Dry Run (No Deployment)
 
-Omit the `-Deploy` flag to test locally:
+Omit the `-Deploy` flag to test locally; this is the only approved dry-run build path. It builds and packages but doesn't commit, tag, or upload to GitHub:
 
 ```powershell
 .\external\phoenix-build-scripts\scripts\deploy-release.ps1 -IncrementPatch
 ```
-
-This builds and packages but doesn't commit, tag, or upload to GitHub.
 
 ### Error Handling
 
@@ -382,7 +377,7 @@ Copy templates manually or use `init-project.ps1` to bootstrap.
 
 ### "phoenix-build.json not found"
 
-Run from project root or specify path:
+Run from project root or specify path (always via deploy-release.ps1):
 ```powershell
 .\external\phoenix-build-scripts\scripts\deploy-release.ps1 -ConfigFile "path/to/phoenix-build.json"
 ```

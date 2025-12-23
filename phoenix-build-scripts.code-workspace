@@ -1,0 +1,31 @@
+{
+    "folders": [
+        {
+            "path": ".",
+            "name": "phoenix-build-scripts"
+        }
+    ],
+    "settings": {
+        "files.exclude": {
+            "**/.git": true
+        },
+        "search.exclude": {
+            "**/.git": true
+        },
+        "files.associations": {
+            "*.ps1": "powershell",
+            "*.cmake": "cmake",
+            "*.h.in": "cpp"
+        },
+        "powershell.codeFormatting.preset": "OTBS",
+        "cmake.configureOnOpen": false
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-vscode.cmake-tools",
+            "ms-vscode.powershell",
+            "twxs.cmake",
+            "github.vscode-github-actions"
+        ]
+    }
+}
