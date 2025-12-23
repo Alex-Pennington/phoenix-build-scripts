@@ -1,0 +1,16 @@
+{
+    "projectName": "my-phoenix-project",
+    "githubRepo": "username/repository-name",
+    "executables": [
+        "my_program.exe",
+        "my_tool.exe"
+    ],
+    "dlls": [
+        "dependency.dll"
+    ],
+    "packageFiles": [
+        "README.md",
+        "LICENSE",
+        "docs/"
+    ]
+}

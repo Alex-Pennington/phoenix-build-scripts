@@ -1,0 +1,22 @@
+# Phoenix Build Scripts - .gitignore
+
+# Build outputs (shouldn't be here, but just in case)
+build/
+install/
+*.zip
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.log
