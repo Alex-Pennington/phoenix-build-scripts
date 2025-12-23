@@ -74,7 +74,7 @@ if (-not (Test-Path $cmakePath)) {
 
 $cmakeContent = Get-Content $cmakePath -Raw
 
-if ($cmakeContent -match 'project\([^\n]+VERSION\s+(\d+)\.(\d+)\.(\d+)') {
+if ($cmakeContent -match 'project\s*\([^)]*VERSION\s+(\d+)\.(\d+)\.(\d+)') {
     $major = [int]$matches[1]
     $minor = [int]$matches[2]
     $patch = [int]$matches[3]
@@ -190,7 +190,7 @@ if ($Deploy -and $gitDirty) {
 
 Write-Host "[UPDATE] Updating CMakeLists.txt..." -ForegroundColor Yellow
 
-$newCmakeContent = $cmakeContent -replace '(project\([^\n]+VERSION\s+)\d+\.\d+\.\d+', "`${1}$versionString"
+$newCmakeContent = $cmakeContent -replace '(project\s*\([^)]*VERSION\s+)\d+\.\d+\.\d+', "`${1}$versionString"
 Set-Content $cmakePath $newCmakeContent -NoNewline
 
 #============================================================================
